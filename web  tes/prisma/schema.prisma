@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  username  String
+  success   Boolean
+  ip        String?
+  timestamp DateTime @default(now())
+}
+
+model AuthSession {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  username  String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
+model AccountLock {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  failedCount  Int      @default(0)
+  lockedUntil  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
